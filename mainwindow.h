@@ -2,6 +2,12 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
+#include <QFileDialog>
+#include <QLineEdit>
+#include <QPushButton>
+#include <QGridLayout>
+
+#include <graph/Graph.h>
 
 namespace Ui {
 class MainWindow;
