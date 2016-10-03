@@ -7,7 +7,7 @@
 #include <QPushButton>
 #include <QGridLayout>
 
-#include <graph/Graph.h>
+#include <ExecutionServer.h>
 
 namespace Ui {
 class MainWindow;

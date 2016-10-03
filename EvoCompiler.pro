@@ -24,9 +24,9 @@ RESOURCES += \
 
 INCLUDEPATH += X:/boost_1_61_0
 INCLUDEPATH += X:/EvoCoreLibrary/include
-INCLUDEPATH += X:/EvoCoreLibrary/external
+INCLUDEPATH += X:/EvoCoreLibrary/lib
 INCLUDEPATH += C:/Python27/include
 
-LIBS += -L$$quote(X:\boost_1_61_0\stage\lib) -lboost_python-vc140-mt-1_61
-LIBS += -L$$quote(C:\Python27\libs)
-LIBS += -L$$quote(X:\EvoCoreLibrary\lib) -lEvoCoderCore
+LIBS += -L$$quote(X:/boost_1_61_0/stage/lib) -lboost_python-vc140-mt-1_61
+LIBS += -L$$quote(C:/Python27/libs)
+LIBS += -L$$quote(X:/EvoCoreLibrary/lib) -lEvoCoderCore
