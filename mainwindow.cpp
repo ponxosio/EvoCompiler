@@ -5,6 +5,8 @@ MainWindow::MainWindow(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::MainWindow)
 {
+    PythonEnvironment::GetInstance()->initEnvironment();
+
     ui->setupUi(this);
 
     protocolEdit = new QLineEdit();
@@ -61,6 +63,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
 MainWindow::~MainWindow()
 {
+    PythonEnvironment::GetInstance()->finishEnvironment();
     delete ui;
 }
 
@@ -69,17 +72,29 @@ void MainWindow::exit() {
 }
 
 void MainWindow::execute() {
-    std::shared_ptr<ProtocolGraph> bioBlocksprotocol = std::shared_ptr<ProtocolGraph>(BioBlocksJSONReader::GetInstance()->loadFile(protocolEdit->text().toUtf8().constData()));
-    std::string reference = ExecutionServer::GetInstance()->addProtocolOnNewMachine(bioBlocksprotocol,
-                                                                                    machineEdit->text().toUtf8().constData());
-    ExecutionServer::GetInstance()->exec(reference);
+    try {
+        std::shared_ptr<ProtocolGraph> bioBlocksprotocol = std::shared_ptr<ProtocolGraph>(BioBlocksJSONReader::GetInstance()->loadFile(protocolEdit->text().toUtf8().constData()));
+        std::string reference = ExecutionServer::GetInstance()->addProtocolOnNewMachine(bioBlocksprotocol,
+                                                                                        machineEdit->text().toUtf8().constData());
+        ExecutionServer::GetInstance()->exec(reference);
+
+        QMessageBox::information(this, "corret execution", "protocol executed correctly");
+    } catch (exception &e) {
+        QMessageBox::critical(this, "error", "exception: "  + QString::fromStdString(e.what()));
+    }
 }
 
 void MainWindow::test() {
-    std::shared_ptr<ProtocolGraph> bioBlocksprotocol = std::shared_ptr<ProtocolGraph>(BioBlocksJSONReader::GetInstance()->loadFile(protocolEdit->text().toUtf8().constData()));
-    std::string reference = ExecutionServer::GetInstance()->addProtocolOnNewMachine(bioBlocksprotocol,
-                                                                                    machineEdit->text().toUtf8().constData());
-    ExecutionServer::GetInstance()->test(reference);
+    try{
+        std::shared_ptr<ProtocolGraph> bioBlocksprotocol = std::shared_ptr<ProtocolGraph>(BioBlocksJSONReader::GetInstance()->loadFile(protocolEdit->text().toUtf8().constData()));
+        std::string reference = ExecutionServer::GetInstance()->addProtocolOnNewMachine(bioBlocksprotocol,
+                                                                                        machineEdit->text().toUtf8().constData());
+        ExecutionServer::GetInstance()->test(reference);
+
+        QMessageBox::information(this, "corret execution", "protocol executed correctly");
+    } catch (exception &e) {
+        QMessageBox::critical(this, "error", "exception: "  + QString::fromStdString(e.what()));
+    }
 }
 
 void MainWindow::searchProtocol() {

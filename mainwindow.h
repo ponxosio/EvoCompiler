@@ -7,10 +7,12 @@
 #include <QPushButton>
 #include <QGridLayout>
 #include <QGroupBox>
+#include <QMessageBox>
 
 #include <ExecutionServer.h>
 #include <BioBlocksJSONReader.h>
 #include <protocolGraph/ProtocolGraph.h>
+#include <plugin/PythonEnvironment.h>
 
 namespace Ui {
 class MainWindow;
