@@ -15,8 +15,8 @@ MainWindow::MainWindow(QWidget *parent) :
     machineEdit = new QLineEdit();
     machineEdit->setReadOnly(true);
 
-    logEdit = new QLineEdit();
-    logEdit->setReadOnly(true);
+    /*logEdit = new QLineEdit();
+    logEdit->setReadOnly(true);*/
 
     btnExecute = new QPushButton("execute");
     btnExecute->setEnabled(false);
@@ -25,7 +25,7 @@ MainWindow::MainWindow(QWidget *parent) :
     btnTest->setEnabled(false);
     QPushButton* btnOpenProtocol = new QPushButton("open protocol");
     QPushButton* btnOpenMachine = new QPushButton("open machine");
-    QPushButton* btnLog = new QPushButton("set log directory");
+    //QPushButton* btnLog = new QPushButton("set log directory");
 
     QGroupBox* boxFiles = new QGroupBox();
     QGridLayout* gridFiles = new QGridLayout();
@@ -33,8 +33,8 @@ MainWindow::MainWindow(QWidget *parent) :
     gridFiles->addWidget(btnOpenProtocol, 0, 1);
     gridFiles->addWidget(machineEdit, 1,0);
     gridFiles->addWidget(btnOpenMachine, 1, 1);
-    gridFiles->addWidget(logEdit, 2,0);
-    gridFiles->addWidget(btnLog, 2, 1);
+    /*gridFiles->addWidget(logEdit, 2,0);
+    gridFiles->addWidget(btnLog, 2, 1);*/
     boxFiles->setLayout(gridFiles);
 
     QGroupBox* boxBtns = new QGroupBox();
@@ -56,7 +56,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(btnExecute, SIGNAL(clicked(bool)), this, SLOT(execute()));
     connect(btnTest, SIGNAL(clicked(bool)), this, SLOT(test()));
     connect(btnExeit, SIGNAL(clicked(bool)), this, SLOT(exit()));
-    connect(btnLog, SIGNAL(clicked(bool)), this, SLOT(setLogDir()));
+    //connect(btnLog, SIGNAL(clicked(bool)), this, SLOT(setLogDir()));
     connect(btnOpenProtocol, SIGNAL(clicked(bool)), this, SLOT(searchProtocol()));
     connect(btnOpenMachine, SIGNAL(clicked(bool)), this, SLOT(searchMachine()));
 }
@@ -116,13 +116,13 @@ void MainWindow::searchMachine() {
 void MainWindow::setLogDir() {
     QString dir = QFileDialog::getExistingDirectory(this, tr("Open Directory"), QString(), QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
     if (!dir.isEmpty()) {
-        logEdit->setText(dir);
+        //logEdit->setText(dir);
         checkIfExecutionPossible();
     }
 }
 
 void MainWindow::checkIfExecutionPossible() {
-    if (!logEdit->text().isEmpty() &&
+    if (/*!logEdit->text().isEmpty() &&*/
             !protocolEdit->text().isEmpty() &&
             !machineEdit->text().isEmpty())
     {

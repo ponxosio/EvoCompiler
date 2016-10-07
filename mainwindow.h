@@ -38,7 +38,7 @@ private:
     Ui::MainWindow *ui;
     QLineEdit* protocolEdit;
     QLineEdit* machineEdit;
-    QLineEdit* logEdit;
+    //QLineEdit* logEdit;
     QPushButton* btnTest;
     QPushButton* btnExecute;
 
