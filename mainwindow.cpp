@@ -86,7 +86,8 @@ void MainWindow::execute() {
 
 void MainWindow::test() {
     try{
-        std::shared_ptr<ProtocolGraph> bioBlocksprotocol = std::shared_ptr<ProtocolGraph>(BioBlocksJSONReader::GetInstance()->loadFile(protocolEdit->text().toUtf8().constData()));
+        //std::shared_ptr<ProtocolGraph> bioBlocksprotocol = std::shared_ptr<ProtocolGraph>(BioBlocksJSONReader::GetInstance()->loadFile(protocolEdit->text().toUtf8().constData()));
+        std::shared_ptr<ProtocolGraph> bioBlocksprotocol = std::shared_ptr<ProtocolGraph>(ProtocolGraph::fromJSON(protocolEdit->text().toUtf8().constData()));
         std::string reference = ExecutionServer::GetInstance()->addProtocolOnNewMachine(bioBlocksprotocol,
                                                                                         machineEdit->text().toUtf8().constData());
         ExecutionServer::GetInstance()->test(reference);
