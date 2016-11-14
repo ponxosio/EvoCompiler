@@ -1,6 +1,8 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+# define VERSION 0.02
+
 #include <QMainWindow>
 #include <QFileDialog>
 #include <QLineEdit>
@@ -37,6 +39,7 @@ public slots:
     void searchMachine();
     void setLogDir();
     void changeComInterface();
+    void about();
 
 private:
     Ui::MainWindow *ui;

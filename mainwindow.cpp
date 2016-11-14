@@ -27,11 +27,12 @@ MainWindow::MainWindow(QWidget *parent) :
     QPushButton* btnOpenMachine = new QPushButton("open machine");
     comInterfaceBtn = new QPushButton("Change communications Interface");
     comInterfaceBtn->setEnabled(false);
-    //QPushButton* btnLog = new QPushButton("set log directory");
+    QPushButton* btnAbout = new QPushButton("About");
 
     protocolTypeCombo = new QComboBox(this);
     protocolTypeCombo->addItem("EvoCoder");
     protocolTypeCombo->addItem("BioBlocks");
+    protocolTypeCombo->setCurrentIndex(1);
 
     QGroupBox* boxFiles = new QGroupBox();
     QGridLayout* gridFiles = new QGridLayout();
@@ -40,8 +41,6 @@ MainWindow::MainWindow(QWidget *parent) :
     gridFiles->addWidget(protocolTypeCombo, 0, 2);
     gridFiles->addWidget(machineEdit, 1,0);
     gridFiles->addWidget(btnOpenMachine, 1, 1);
-    /*gridFiles->addWidget(logEdit, 2,0);
-    gridFiles->addWidget(btnLog, 2, 1);*/
     boxFiles->setLayout(gridFiles);
 
     QGroupBox* boxBtns = new QGroupBox();
@@ -49,7 +48,8 @@ MainWindow::MainWindow(QWidget *parent) :
     gridBtns->addWidget(btnExecute, 0, 0);
     gridBtns->addWidget(btnTest, 1, 0);
     gridBtns->addWidget(comInterfaceBtn, 2, 0);
-    gridBtns->addWidget(btnExeit, 3, 0);
+    gridBtns->addWidget(btnAbout, 3, 0);
+    gridBtns->addWidget(btnExeit, 4, 0);
     boxBtns->setLayout(gridBtns);
 
     QGridLayout* mainLayout = new QGridLayout();
@@ -58,6 +58,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     QWidget *window = new QWidget();
     window->setLayout(mainLayout);
+    window->setMinimumWidth(600);
 
     setCentralWidget(window);
 
@@ -65,7 +66,7 @@ MainWindow::MainWindow(QWidget *parent) :
     connect(btnTest, SIGNAL(clicked(bool)), this, SLOT(test()));
     connect(comInterfaceBtn, SIGNAL(clicked(bool)), this, SLOT(changeComInterface()));
     connect(btnExeit, SIGNAL(clicked(bool)), this, SLOT(exit()));
-    //connect(btnLog, SIGNAL(clicked(bool)), this, SLOT(setLogDir()));
+    connect(btnAbout, SIGNAL(clicked(bool)), this, SLOT(about()));
     connect(btnOpenProtocol, SIGNAL(clicked(bool)), this, SLOT(searchProtocol()));
     connect(btnOpenMachine, SIGNAL(clicked(bool)), this, SLOT(searchMachine()));
 }
@@ -74,6 +75,10 @@ MainWindow::~MainWindow()
 {
     PythonEnvironment::GetInstance()->finishEnvironment();
     delete ui;
+}
+
+void MainWindow::about() {
+    QMessageBox::about(this, "About", "EvoCompiler version v" + QString::number(VERSION));
 }
 
 void MainWindow::exit() {
