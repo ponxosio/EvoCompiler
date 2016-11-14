@@ -25,12 +25,19 @@ MainWindow::MainWindow(QWidget *parent) :
     btnTest->setEnabled(false);
     QPushButton* btnOpenProtocol = new QPushButton("open protocol");
     QPushButton* btnOpenMachine = new QPushButton("open machine");
+    comInterfaceBtn = new QPushButton("Change communications Interface");
+    comInterfaceBtn->setEnabled(false);
     //QPushButton* btnLog = new QPushButton("set log directory");
+
+    protocolTypeCombo = new QComboBox(this);
+    protocolTypeCombo->addItem("EvoCoder");
+    protocolTypeCombo->addItem("BioBlocks");
 
     QGroupBox* boxFiles = new QGroupBox();
     QGridLayout* gridFiles = new QGridLayout();
     gridFiles->addWidget(protocolEdit, 0,0);
     gridFiles->addWidget(btnOpenProtocol, 0, 1);
+    gridFiles->addWidget(protocolTypeCombo, 0, 2);
     gridFiles->addWidget(machineEdit, 1,0);
     gridFiles->addWidget(btnOpenMachine, 1, 1);
     /*gridFiles->addWidget(logEdit, 2,0);
@@ -41,7 +48,8 @@ MainWindow::MainWindow(QWidget *parent) :
     QGridLayout* gridBtns = new QGridLayout();
     gridBtns->addWidget(btnExecute, 0, 0);
     gridBtns->addWidget(btnTest, 1, 0);
-    gridBtns->addWidget(btnExeit, 2, 0);
+    gridBtns->addWidget(comInterfaceBtn, 2, 0);
+    gridBtns->addWidget(btnExeit, 3, 0);
     boxBtns->setLayout(gridBtns);
 
     QGridLayout* mainLayout = new QGridLayout();
@@ -55,6 +63,7 @@ MainWindow::MainWindow(QWidget *parent) :
 
     connect(btnExecute, SIGNAL(clicked(bool)), this, SLOT(execute()));
     connect(btnTest, SIGNAL(clicked(bool)), this, SLOT(test()));
+    connect(comInterfaceBtn, SIGNAL(clicked(bool)), this, SLOT(changeComInterface()));
     connect(btnExeit, SIGNAL(clicked(bool)), this, SLOT(exit()));
     //connect(btnLog, SIGNAL(clicked(bool)), this, SLOT(setLogDir()));
     connect(btnOpenProtocol, SIGNAL(clicked(bool)), this, SLOT(searchProtocol()));
@@ -73,9 +82,15 @@ void MainWindow::exit() {
 
 void MainWindow::execute() {
     try {
-        std::shared_ptr<ProtocolGraph> bioBlocksprotocol = std::shared_ptr<ProtocolGraph>(BioBlocksJSONReader::GetInstance()->loadFile(protocolEdit->text().toUtf8().constData()));
-        std::string reference = ExecutionServer::GetInstance()->addProtocolOnNewMachine(bioBlocksprotocol,
-                                                                                        machineEdit->text().toUtf8().constData());
+        std::string reference;
+        if (protocolTypeCombo->currentIndex() == 0) {
+            reference = ExecutionServer::GetInstance()->addProtocolOnExistingMachine(protocolEdit->text().toUtf8().constData(),
+                                                                                machineReference);
+        } else if (protocolTypeCombo->currentIndex() == 1) {
+            reference = ExecutionServer::GetInstance()->addBioBlocksProtocolOnExistingMachine(protocolEdit->text().toUtf8().constData(),
+                                                                                machineReference);
+            ExecutionServer::GetInstance()->getEvoCoder(reference)->printProtocol("bioblocksGraph.graph");
+        }
         ExecutionServer::GetInstance()->exec(reference);
 
         QMessageBox::information(this, "corret execution", "protocol executed correctly");
@@ -86,16 +101,26 @@ void MainWindow::execute() {
 
 void MainWindow::test() {
     try{
-        //std::shared_ptr<ProtocolGraph> bioBlocksprotocol = std::shared_ptr<ProtocolGraph>(BioBlocksJSONReader::GetInstance()->loadFile(protocolEdit->text().toUtf8().constData()));
-        std::shared_ptr<ProtocolGraph> bioBlocksprotocol = std::shared_ptr<ProtocolGraph>(ProtocolGraph::fromJSON(protocolEdit->text().toUtf8().constData()));
-        std::string reference = ExecutionServer::GetInstance()->addProtocolOnNewMachine(bioBlocksprotocol,
-                                                                                        machineEdit->text().toUtf8().constData());
+        std::string reference;
+        if (protocolTypeCombo->currentIndex() == 0) {
+            reference = ExecutionServer::GetInstance()->addProtocolOnExistingMachine(protocolEdit->text().toUtf8().constData(),
+                                                                                machineReference);
+        } else if (protocolTypeCombo->currentIndex() == 1) {
+            reference = ExecutionServer::GetInstance()->addBioBlocksProtocolOnExistingMachine(protocolEdit->text().toUtf8().constData(),
+                                                                                machineReference);
+             ExecutionServer::GetInstance()->getEvoCoder(reference)->printProtocol("bioblocksGraph.graph");
+        }
         ExecutionServer::GetInstance()->test(reference);
 
         QMessageBox::information(this, "corret execution", "protocol executed correctly");
     } catch (exception &e) {
         QMessageBox::critical(this, "error", "exception: "  + QString::fromStdString(e.what()));
     }
+}
+
+void MainWindow::changeComInterface() {
+    CommunicationDialog dialog(machineReference, this);
+    dialog.exec();
 }
 
 void MainWindow::searchProtocol() {
@@ -110,6 +135,8 @@ void MainWindow::searchMachine() {
     QString path = QFileDialog::getOpenFileName(this, "select machine to open", QString(), tr("JSON (*.json)"));
     if (!path.isEmpty()) {
         machineEdit->setText(path);
+        machineReference = ExecutionMachineServer::GetInstance()->addNewMachine(path.toUtf8().constData());
+        comInterfaceBtn->setEnabled(true);
         checkIfExecutionPossible();
     }
 }

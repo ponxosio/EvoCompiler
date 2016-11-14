@@ -8,11 +8,14 @@
 #include <QGridLayout>
 #include <QGroupBox>
 #include <QMessageBox>
+#include <QComboBox>
 
 #include <ExecutionServer.h>
-#include <BioBlocksJSONReader.h>
+#include <ExecutionMachineServer.h>
 #include <protocolGraph/ProtocolGraph.h>
 #include <plugin/PythonEnvironment.h>
+
+#include "communicationdialog.h"
 
 namespace Ui {
 class MainWindow;
@@ -33,6 +36,7 @@ public slots:
     void searchProtocol();
     void searchMachine();
     void setLogDir();
+    void changeComInterface();
 
 private:
     Ui::MainWindow *ui;
@@ -41,6 +45,10 @@ private:
     //QLineEdit* logEdit;
     QPushButton* btnTest;
     QPushButton* btnExecute;
+    QPushButton* comInterfaceBtn;
+
+    QComboBox* protocolTypeCombo;
+    std::string machineReference;
 
     void checkIfExecutionPossible();
 };
