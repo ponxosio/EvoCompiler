@@ -50,6 +50,7 @@ private:
     QPushButton* btnExecute;
     QPushButton* comInterfaceBtn;
 
+    QLineEdit* timeSliceEdit;
     QComboBox* protocolTypeCombo;
     std::string machineReference;
 

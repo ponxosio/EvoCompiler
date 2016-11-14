@@ -15,6 +15,8 @@ MainWindow::MainWindow(QWidget *parent) :
     machineEdit = new QLineEdit();
     machineEdit->setReadOnly(true);
 
+    timeSliceEdit = new QLineEdit();
+
     /*logEdit = new QLineEdit();
     logEdit->setReadOnly(true);*/
 
@@ -36,11 +38,13 @@ MainWindow::MainWindow(QWidget *parent) :
 
     QGroupBox* boxFiles = new QGroupBox();
     QGridLayout* gridFiles = new QGridLayout();
-    gridFiles->addWidget(protocolEdit, 0,0);
-    gridFiles->addWidget(btnOpenProtocol, 0, 1);
-    gridFiles->addWidget(protocolTypeCombo, 0, 2);
-    gridFiles->addWidget(machineEdit, 1,0);
-    gridFiles->addWidget(btnOpenMachine, 1, 1);
+    gridFiles->addWidget(new QLabel("time step(ms:)"), 0, 0);
+    gridFiles->addWidget(timeSliceEdit, 0, 1);
+    gridFiles->addWidget(protocolEdit, 1,0);
+    gridFiles->addWidget(btnOpenProtocol, 1, 1);
+    gridFiles->addWidget(protocolTypeCombo, 1, 2);
+    gridFiles->addWidget(machineEdit, 2,0);
+    gridFiles->addWidget(btnOpenMachine, 2, 1);
     boxFiles->setLayout(gridFiles);
 
     QGroupBox* boxBtns = new QGroupBox();
@@ -93,7 +97,7 @@ void MainWindow::execute() {
                                                                                 machineReference);
         } else if (protocolTypeCombo->currentIndex() == 1) {
             reference = ExecutionServer::GetInstance()->addBioBlocksProtocolOnExistingMachine(protocolEdit->text().toUtf8().constData(),
-                                                                                machineReference);
+                                                                                machineReference, timeSliceEdit->text().toLong());
             ExecutionServer::GetInstance()->getEvoCoder(reference)->printProtocol("bioblocksGraph.graph");
         }
         ExecutionServer::GetInstance()->exec(reference);
@@ -112,7 +116,7 @@ void MainWindow::test() {
                                                                                 machineReference);
         } else if (protocolTypeCombo->currentIndex() == 1) {
             reference = ExecutionServer::GetInstance()->addBioBlocksProtocolOnExistingMachine(protocolEdit->text().toUtf8().constData(),
-                                                                                machineReference);
+                                                                                machineReference, timeSliceEdit->text().toLong());
              ExecutionServer::GetInstance()->getEvoCoder(reference)->printProtocol("bioblocksGraph.graph");
         }
         ExecutionServer::GetInstance()->test(reference);
